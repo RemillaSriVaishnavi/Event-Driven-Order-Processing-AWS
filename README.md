@@ -1,6 +1,6 @@
-# 📦 Event-Driven Order Processing System (AWS)
+# Event-Driven Order Processing System (AWS)
 
-## 📌 Overview
+## Overview
 
 This project implements a **robust, scalable event-driven backend system** for processing e-commerce orders using **AWS serverless services**.
 
@@ -18,9 +18,9 @@ The implementation demonstrates:
 * Local development using Docker
 
 
-# 🏗 Architecture Overview
+## Architecture Overview
 
-## 🔄 Event Flow
+## Event Flow
 
 ```
 Client
@@ -43,7 +43,7 @@ CloudWatch Logs
 ```
 
 
-## 🔧 AWS Services Used
+## AWS Services Used
 
 | Component          | AWS Service        |
 | ------------------ | ------------------ |
@@ -57,44 +57,61 @@ CloudWatch Logs
 
 
 
-# 📂 Project Structure
+## Project Structure
 
 ```
-order-processing-eda/
-│
-├── src/
-│   ├── api/
-│   │   └── create_order.py
-│   ├── order_processor/
-│   │   └── handler.py
-│   ├── notification_sender/
-│   │   └── handler.py
-│   └── common/
-│       ├── db.py
-│       ├── sqs_client.py
-│       └── sqs_publisher.py
+event-driven-order-processing/
 │
 ├── db/
 │   ├── schema.sql
 │   └── seed.sql
 │
-├── tests/
-│   └── test_order_processor.py
-│
 ├── iac/
 │   ├── main.tf
 │   ├── variables.tf
-│   └── outputs.tf
+│   ├── outputs.tf
+│   ├── iam.tf
+│   ├── api_gateway.tf
+│   ├── lambda.tf
+│   ├── rds.tf
+│   └── sqs.tf
 │
+├── src/
+│   │
+│   ├── api/ 
+│   │   └── create_order.py
+│   │
+│   ├── common/
+│   │   ├── db.py
+│   │   ├── idempotency.py
+│   │   ├── models.py
+│   │   ├── sqs_client.py
+│   │   └── sqs_publisher.py
+│   │
+│   ├── notification_sender/
+│   │   └── handler.py
+│   │
+│   └── order_processor/
+│       └── handler.py
+│
+├── tests/
+│   ├── test_events.py
+│   ├── test_inventory.py
+│   └── test_order_processor.py
+│
+├── .env.example
+├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
-└── README.md
+├── README.md
+└── .gitignore
+
 ```
 
 
-# 🗄 Database Schema
+## Database Schema
 
-## 🧾 Orders Table
+## Orders Table
 
 ```sql
 CREATE TABLE orders (
@@ -107,7 +124,7 @@ CREATE TABLE orders (
 );
 ```
 
-## 📦 Inventory Table
+## Inventory Table
 
 ```sql
 CREATE TABLE inventory (
@@ -120,11 +137,11 @@ CREATE TABLE inventory (
 Inventory is pre-seeded with sample products.
 
 
-# 🌐 API Endpoint
+## API Endpoint
 
-## POST `/api/orders`
+### POST `/api/orders`
 
-### Request Body
+#### Request Body
 
 ```json
 {
@@ -135,7 +152,7 @@ Inventory is pre-seeded with sample products.
 }
 ```
 
-### Responses
+#### Responses
 
 | Scenario        | Status Code     |
 | --------------- | --------------- |
@@ -144,9 +161,9 @@ Inventory is pre-seeded with sample products.
 
 
 
-# 📬 Event Schemas
+## Event Schemas
 
-## 📨 OrderCreated Event
+### OrderCreated Event
 
 ```json
 {
@@ -159,7 +176,7 @@ Inventory is pre-seeded with sample products.
 }
 ```
 
-## 📦 OrderProcessed Event
+### OrderProcessed Event
 
 ```json
 {
@@ -171,7 +188,7 @@ Inventory is pre-seeded with sample products.
 ```
 
 
-# ⚙️ Order Processing Logic
+## Order Processing Logic
 
 Inside `OrderProcessor` Lambda:
 
@@ -189,7 +206,7 @@ Inside `OrderProcessor` Lambda:
 
 
 
-# 🛑 Dead Letter Queue (DLQ)
+## Dead Letter Queue (DLQ)
 
 * `order-created-dlq`
 * Attached to `order-created-queue`
@@ -197,7 +214,7 @@ Inside `OrderProcessor` Lambda:
 * Failed messages automatically moved to DLQ
 
 
-# 🔐 Security & IAM
+## Security & IAM
 
 * Least privilege IAM roles
 * Lambdas only allowed required SQS actions
@@ -205,7 +222,7 @@ Inside `OrderProcessor` Lambda:
 * DB credentials stored in environment variables
 
 
-# 🧱 Infrastructure as Code (Terraform)
+## Infrastructure as Code (Terraform)
 
 All AWS resources are defined in the `iac/` directory:
 
@@ -225,7 +242,7 @@ terraform apply
 ```
 
 
-# 🐳 Local Development
+## Local Development
 
 Run MySQL + Tests locally:
 
@@ -240,7 +257,7 @@ This:
 * Runs unit tests
 
 
-# 🧪 Unit Testing
+## Unit Testing
 
 Unit tests focus on:
 
@@ -259,7 +276,7 @@ Target coverage: **≥70% of OrderProcessor logic**
 
 
 
-# 📊 Failure Handling
+## Failure Handling
 
 | Scenario               | Outcome              |
 | ---------------------- | -------------------- |
@@ -270,7 +287,7 @@ Target coverage: **≥70% of OrderProcessor logic**
 
 
 
-# 🧠 Design Decisions
+## Design Decisions
 
 ### Why Event-Driven?
 
@@ -280,7 +297,6 @@ Target coverage: **≥70% of OrderProcessor logic**
 * Independent service evolution
 
 ### Why SQS?
-
 * Fully managed
 * At-least-once delivery
 * DLQ support
@@ -291,7 +307,7 @@ Target coverage: **≥70% of OrderProcessor logic**
 * Ensure data consistency
 
 
-# 🚀 Deployment Steps (AWS Console)
+## Deployment Steps (AWS Console)
 
 1. Create SQS queues
 2. Configure DLQ
@@ -303,7 +319,7 @@ Target coverage: **≥70% of OrderProcessor logic**
 8. Deploy
 
 
-# 🎯 Conclusion
+## Conclusion
 
 This project demonstrates a **production-ready serverless event-driven backend** on AWS that:
 
